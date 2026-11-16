@@ -1,21 +1,26 @@
-[app]
-title = PassGen
-package.name = passgen
-package.domain = org.test
-source.dir = .
-source.include_exts = py,png,jpg,kv,atlas
-version = 0.1
-requirements = python3,kivy
-orientation = portrait
-fullscreen = 0
-android.permissions = INTERNET
-android.api = 33
-android.minapi = 21
-android.ndk = 25b
-android.accept_sdk_license = True
-android.archs = arm64-v8a, armeabi-v7a
-android.allow_backup = True
+name: Build Android APK
 
-[buildozer]
-log_level = 2
-warn_on_root = 0
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          buildozer_version: stable
+          command: buildozer -v android debug
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: passgen-apk
+          path: ${{ steps.buildozer.outputs.filename }}
