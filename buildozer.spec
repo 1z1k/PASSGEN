@@ -1,5 +1,6 @@
 [app]
-title = Генератор паролів
+title = PassGen
+requirements = python3==3.11.5,kivy==2.3.0
 package.name = passgen
 package.domain = org.test
 source.dir = .
